@@ -1,4 +1,4 @@
-﻿namespace PassIn.Communication.Requests;
+﻿namespace Communication.Requests;
 public class RequestRegisterEventJson
 {
     public string Name { get; set; } = string.Empty;

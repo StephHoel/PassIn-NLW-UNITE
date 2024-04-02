@@ -11,13 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PassIn.Application\PassIn.Application.csproj" />
-    <ProjectReference Include="..\PassIn.Communication\PassIn.Communication.csproj" />
-    <ProjectReference Include="..\PassIn.Exceptions\PassIn.Exceptions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\Communication\Communication.csproj" />
+    <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Exceptions\Exceptions.csproj" />
   </ItemGroup>
 
 </Project>

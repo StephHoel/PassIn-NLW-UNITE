@@ -1,4 +1,4 @@
-﻿namespace PassIn.Communication.Responses;
+﻿namespace Communication.Responses;
 public class ResponseAttendeeJson
 {
     public Guid Id { get; set; }
