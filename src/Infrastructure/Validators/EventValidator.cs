@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Validators;
+namespace Infrastructure.Validators;
 
 public class EventValidator : AbstractValidator<Event>
 {
@@ -29,12 +29,13 @@ public class EventValidator : AbstractValidator<Event>
                 .NotEmpty()
                 .WithMessage("The details is invalid");
 
-        var response = _dbContext.Events.FirstOrDefault(x => x.Slug == x.Slug);
-        RuleFor(_ => response)
-                .NotNull()
-                .WithMessage("This title is already being used. Try another.");
+        RuleFor(entity => entity.Slug)
+            .Must(BeUniqueSlug)
+            .WithMessage("This title is already being used. Try another.");
+    }
 
-        RuleFor(request => request)
-            .SetValidator(new UniqueSlugValidator(_dbContext));
+    private bool BeUniqueSlug(string slug)
+    {
+        return !_dbContext.Events.Any(e => e.Slug == slug);
     }
 }

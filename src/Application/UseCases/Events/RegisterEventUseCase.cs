@@ -1,42 +1,22 @@
-﻿using Application.Validators;
-using AutoMapper;
-using Communication.Requests;
+﻿using Communication.Requests;
 using Communication.Responses;
-using Domain.Entities;
-using Exceptions;
-using FluentValidation;
-using Infrastructure.Context;
+using Domain.Interfaces;
 
 namespace Application.UseCases.Events;
 
 public class RegisterEventUseCase
 {
-    private readonly PassInDbContext _dbContext;
-    private readonly IMapper _mapper;
-    private readonly EventValidator _validator;
+    private readonly IEventRepository _respository;
 
-    public RegisterEventUseCase(PassInDbContext dbContext, IMapper mapper)
+    public RegisterEventUseCase(IEventRepository respository)
     {
-        _dbContext = dbContext;
-        _mapper = mapper;
-        _validator = new EventValidator(_dbContext);
+        _respository = respository;
     }
 
     public async Task<ResponseRegisteredJson> Execute(RequestEventJson request)
     {
-        var entity = _mapper.Map<Event>(request);
+        var response = _respository.CreateNewEvent(request);
 
-        var result = _validator.Validate(entity);
-
-        if (!result.IsValid)
-        {
-            foreach (var error in result.Errors)
-                throw new ErrorOnValidationException(error.ErrorMessage);
-        }
-
-        _dbContext.Events.Add(entity);
-        _dbContext.SaveChanges();
-
-        return _mapper.Map<ResponseRegisteredJson>(entity);
+        return response;
     }
 }

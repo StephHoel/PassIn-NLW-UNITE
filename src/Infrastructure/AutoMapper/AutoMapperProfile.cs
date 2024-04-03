@@ -3,7 +3,7 @@ using Communication.Requests;
 using Communication.Responses;
 using Domain.Entities;
 
-namespace Application.AutoMapper;
+namespace Infrastructure.AutoMapper;
 
 public class AutoMapperProfile : Profile
 {

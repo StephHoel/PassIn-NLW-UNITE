@@ -1,63 +1,22 @@
-﻿using Application.Validators;
-using AutoMapper;
-using Communication.Requests;
+﻿using Communication.Requests;
 using Communication.Responses;
-using Domain.Entities;
-using Exceptions;
-using Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
+using Domain.Interfaces;
 
 namespace Application.UseCases.Events;
 
 public class RegisterAttendeeOnEventUseCase
 {
-    private readonly PassInDbContext _dbContext;
-    private readonly IMapper _mapper;
-    private readonly AttendeeValidator _validator;
+    private readonly IAttendeeRepository _repository;
 
-    public RegisterAttendeeOnEventUseCase(PassInDbContext dbContext, IMapper mapper)
+    public RegisterAttendeeOnEventUseCase(IAttendeeRepository repository)
     {
-        _dbContext = dbContext;
-        _mapper = mapper;
-        _validator = new AttendeeValidator(_dbContext);
+        _repository = repository;
     }
 
     public async Task<ResponseRegisteredJson> Execute(RequestRegisterEventJson request)
     {
-        var entity = _mapper.Map<Attendee>(request);
+        var response = _repository.CreateNewAttendee(request);
 
-        Validate(entity);
-
-        _dbContext.Attendees.Add(entity);
-        _dbContext.SaveChanges();
-
-        return _mapper.Map<ResponseRegisteredJson>(entity);
-    }
-
-    public void Validate(Attendee attendee)
-    {
-        var eventEntity = _dbContext.Events.FirstOrDefault(e => e.Id == attendee.Event_Id);
-
-        if (eventEntity is null)
-            throw new NotFoundException("An event with this id does not exist.");
-
-        var result = _validator.Validate(attendee);
-
-        if (!result.IsValid)
-        {
-            foreach (var error in result.Errors)
-                throw new ErrorOnValidationException(error.ErrorMessage);
-        }
-
-        var attendeeAlreadyRegistered = _dbContext.Attendees
-            .Any(a => a.Email.Equals(attendee.Email) && a.Event_Id == attendee.Event_Id);
-
-        if (attendeeAlreadyRegistered is true)
-            throw new ConflictException("You cannot register twice on the same event.");
-
-        var attendeeForEvent = _dbContext.Attendees.Count(x=>x.Event_Id==attendee.Event_Id);
-
-        if (attendeeForEvent >= eventEntity.Maximum_Attendees)
-            throw new ConflictException("There is no room for this event.");
+        return response;
     }
 }

@@ -1,17 +1,12 @@
 ﻿using Domain.Entities;
 using FluentValidation;
-using Infrastructure.Context;
 
-namespace Application.Validators;
+namespace Infrastructure.Validators;
 
 public class AttendeeValidator : AbstractValidator<Attendee>
 {
-    private readonly PassInDbContext _dbContext;
-
-    public AttendeeValidator(PassInDbContext dbContext)
+    public AttendeeValidator()
     {
-        _dbContext = dbContext;
-
         RuleFor(entity => entity.Name)
                 .NotEmpty()
                 .WithMessage("The name is invalid");

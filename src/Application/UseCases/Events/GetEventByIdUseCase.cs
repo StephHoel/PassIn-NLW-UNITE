@@ -1,28 +1,21 @@
-﻿using AutoMapper;
-using Communication.Responses;
-using Exceptions;
-using Infrastructure.Context;
+﻿using Communication.Responses;
+using Domain.Interfaces;
 
 namespace Application.UseCases.Events;
 
 public class GetEventByIdUseCase
 {
-    private readonly PassInDbContext _dbContext;
-    private readonly IMapper _mapper;
+    private readonly IEventRepository _repository;
 
-    public GetEventByIdUseCase(PassInDbContext dbContext, IMapper mapper)
+    public GetEventByIdUseCase(IEventRepository repository)
     {
-        _dbContext = dbContext;
-        _mapper = mapper;
+        _repository = repository;
     }
 
     public async Task<ResponseEventJson> Execute(Guid id)
     {
-        var entity = _dbContext.Events.FirstOrDefault(e => e.Id == id);
+        var response = _repository.GetEventById(id);
 
-        if (entity is null)
-            throw new NotFoundException("An event with this id does not exist.");
-
-        return _mapper.Map<ResponseEventJson>(entity);
+        return response;
     }
 }

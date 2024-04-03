@@ -1,7 +1,9 @@
 using Api.Filters;
-using Application.AutoMapper;
 using Application.UseCases.Events;
+using Domain.Interfaces;
+using Infrastructure.AutoMapper;
 using Infrastructure.Context;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +26,10 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 builder.Services.AddScoped<RegisterEventUseCase>();
 builder.Services.AddScoped<GetEventByIdUseCase>();
 builder.Services.AddScoped<RegisterAttendeeOnEventUseCase>();
+
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IAttendeeRepository, AttendeeRepository>();
+
 //builder.Services.AddScoped<>();
 
 builder.Services.AddHttpContextAccessor();
