@@ -31,7 +31,7 @@ public class RegisterEventUseCase
         if (!result.IsValid)
         {
             foreach (var error in result.Errors)
-                throw new PassInException(error.ErrorMessage);
+                throw new ErrorOnValidationException(error.ErrorMessage);
         }
 
         _dbContext.Events.Add(entity);

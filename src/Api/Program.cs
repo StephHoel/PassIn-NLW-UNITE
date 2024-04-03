@@ -1,3 +1,4 @@
+using Api.Filters;
 using Application.AutoMapper;
 using Application.UseCases.Events;
 using Infrastructure.Context;
@@ -10,10 +11,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<RegisterEventUseCase>();
-builder.Services.AddScoped<GetEventByIdUseCase>();
-//builder.Services.AddScoped<>();
-
 builder.Services.AddDbContext<PassInDbContext>(options =>
 {
     var path = Directory.GetCurrentDirectory().Split("src");
@@ -21,6 +18,13 @@ builder.Services.AddDbContext<PassInDbContext>(options =>
 
     options.UseSqlite($"Data Source={dbPath}");
 });
+
+builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)));
+
+builder.Services.AddScoped<RegisterEventUseCase>();
+builder.Services.AddScoped<GetEventByIdUseCase>();
+//builder.Services.AddScoped<>();
+//builder.Services.AddScoped<>();
 
 builder.Services.AddHttpContextAccessor();
 

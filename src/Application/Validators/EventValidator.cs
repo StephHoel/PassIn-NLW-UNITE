@@ -18,13 +18,16 @@ public class EventValidator : AbstractValidator<Event>
         _dbContext = dbContext;
 
         RuleFor(entity => entity.Maximum_Attendees)
-                .GreaterThan(0).WithMessage("The maximum attendees is invalid.");
+                .GreaterThan(0)
+                .WithMessage("The maximum attendees is invalid.");
 
         RuleFor(entity => entity.Title)
-                .NotEmpty().WithMessage("The title is invalid");
+                .NotEmpty()
+                .WithMessage("The title is invalid");
 
         RuleFor(entity => entity.Details)
-                .NotEmpty().WithMessage("The details is invalid");
+                .NotEmpty()
+                .WithMessage("The details is invalid");
 
         var response = _dbContext.Events.FirstOrDefault(x => x.Slug == x.Slug);
         RuleFor(entity => response)
