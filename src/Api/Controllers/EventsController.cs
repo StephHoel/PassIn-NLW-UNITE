@@ -13,12 +13,10 @@ public class EventsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(ResponseRegisteredEventJson), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
-    public IActionResult Register([FromBody] RequestEventJson request)
+    public IActionResult Register([FromServices] RegisterEventUseCase useCase, [FromBody] RequestEventJson request)
     {
         try
         {
-            var useCase = new RegisterEventUseCase();
-
             var result = useCase.Execute(request);
 
             return Created(string.Empty, result);
@@ -26,6 +24,10 @@ public class EventsController : ControllerBase
         catch (PassInException ex)
         {
             return BadRequest(new ResponseErrorJson(ex.Message));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorJson(ex.Message));
         }
         catch
         {
@@ -37,12 +39,10 @@ public class EventsController : ControllerBase
     [Route("{id}")]
     [ProducesResponseType(typeof(ResponseEventJson), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
-    public IActionResult GetById([FromRoute] Guid id)
+    public IActionResult GetById([FromServices] GetEventByIdUseCase useCase, [FromRoute] Guid id)
     {
         try
         {
-            var useCase = new GetEventByIdUseCase();
-
             var response = useCase.Execute(id);
 
             return Ok(response);

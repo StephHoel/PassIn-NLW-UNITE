@@ -1,51 +1,42 @@
-﻿using Communication.Requests;
+﻿using Application.Validators;
+using AutoMapper;
+using Communication.Requests;
 using Communication.Responses;
+using Domain.Entities;
 using Exceptions;
-using Infrastructure;
-using Infrastructure.Entities;
+using FluentValidation;
+using Infrastructure.Context;
 
 namespace Application.UseCases.Events;
 
 public class RegisterEventUseCase
 {
-    public ResponseRegisteredEventJson Execute(RequestEventJson request)
+    private readonly PassInDbContext _dbContext;
+    private readonly IMapper _mapper;
+    private readonly EventValidator _validator;
+
+    public RegisterEventUseCase(PassInDbContext dbContext, IMapper mapper)
     {
-        Validate(request);
-
-        var dbContext = new PassInDbContext();
-
-        var entity = new Event
-        {
-            Title = request.Title,
-            Details = request.Details,
-            Maximum_Attendees = request.MaximumAttendees,
-            Slug = request.Title.ToLower().Replace(" ", "-"),
-        };
-
-        dbContext.Events.Add(entity);
-        dbContext.SaveChanges();
-
-        return new ResponseRegisteredEventJson
-        {
-            Id = entity.Id,
-        };
+        _dbContext = dbContext;
+        _mapper = mapper;
+        _validator = new EventValidator(_dbContext);
     }
 
-    private void Validate(RequestEventJson request)
+    public ResponseRegisteredEventJson Execute(RequestEventJson request)
     {
-        if (request.MaximumAttendees <= 0)
+        var entity = _mapper.Map<Event>(request);
+
+        var result = _validator.Validate(entity);
+
+        if (!result.IsValid)
         {
-            throw new PassInException("The maximum attendees is invalid.");
+            foreach (var error in result.Errors)
+                throw new PassInException(error.ErrorMessage);
         }
 
-        if (string.IsNullOrWhiteSpace(request.Title))
-        {
-            throw new PassInException("The title is invalid");
-        }
+        _dbContext.Events.Add(entity);
+        _dbContext.SaveChanges();
 
-        if (string.IsNullOrWhiteSpace(request.Details))
-        {
-            throw new PassInException("The details is invalid");
-        }
+        return _mapper.Map<ResponseRegisteredEventJson>(entity);
     }
 }
