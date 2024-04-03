@@ -24,24 +24,24 @@ public class ExceptionFilter : IExceptionFilter
     {
         if (context.Exception is NotFoundException)
         {
-            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;
+            context.HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
             context.Result = new NotFoundObjectResult(new ResponseErrorJson(context.Exception.Message));
         }
         else if (context.Exception is ErrorOnValidationException)
         {
-            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Result = new BadRequestObjectResult(new ResponseErrorJson(context.Exception.Message));
         }
         else if (context.Exception is ConflictException)
         {
-            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Conflict;
+            context.HttpContext.Response.StatusCode = StatusCodes.Status409Conflict;
             context.Result = new ConflictObjectResult(new ResponseErrorJson(context.Exception.Message));
         }
     }
 
     private void ThrowUnknownError(ExceptionContext context)
     {
-        context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
         context.Result = new ObjectResult(new ResponseErrorJson("Unknown error"));
     }
 }
