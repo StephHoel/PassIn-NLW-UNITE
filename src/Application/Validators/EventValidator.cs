@@ -30,7 +30,7 @@ public class EventValidator : AbstractValidator<Event>
                 .WithMessage("The details is invalid");
 
         var response = _dbContext.Events.FirstOrDefault(x => x.Slug == x.Slug);
-        RuleFor(entity => response)
+        RuleFor(_ => response)
                 .NotNull()
                 .WithMessage("This title is already being used. Try another.");
 

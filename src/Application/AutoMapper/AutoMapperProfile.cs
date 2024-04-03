@@ -17,6 +17,11 @@ public class AutoMapperProfile : Profile
         CreateMap<Event, ResponseEventJson>()
             .ForMember(dest => dest.Attendees_Amount, opt => opt.MapFrom(_ => -1));
 
-        CreateMap<Event, ResponseRegisteredEventJson>();
+        CreateMap<Event, ResponseRegisteredJson>();
+
+        CreateMap<RequestRegisterEventJson, Attendee>()
+            .ForMember(dest => dest.Created_At, opt => opt.MapFrom(_ => DateTime.UtcNow));
+
+        CreateMap<Attendee, ResponseRegisteredJson>();
     }
 }

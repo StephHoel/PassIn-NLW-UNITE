@@ -1,6 +1,6 @@
 ﻿namespace Communication.Responses;
 
-public class ResponseRegisteredEventJson
+public class ResponseRegisteredJson
 {
     public Guid Id { get; set; }
 }

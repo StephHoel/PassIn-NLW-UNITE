@@ -23,7 +23,7 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 
 builder.Services.AddScoped<RegisterEventUseCase>();
 builder.Services.AddScoped<GetEventByIdUseCase>();
-//builder.Services.AddScoped<>();
+builder.Services.AddScoped<RegisterAttendeeOnEventUseCase>();
 //builder.Services.AddScoped<>();
 
 builder.Services.AddHttpContextAccessor();
