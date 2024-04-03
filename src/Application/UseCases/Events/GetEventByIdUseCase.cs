@@ -16,7 +16,7 @@ public class GetEventByIdUseCase
         _mapper = mapper;
     }
 
-    public ResponseEventJson Execute(Guid id)
+    public async Task<ResponseEventJson> Execute(Guid id)
     {
         var entity = _dbContext.Events.FirstOrDefault(e => e.Id == id);
 

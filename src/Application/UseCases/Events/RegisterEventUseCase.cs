@@ -22,7 +22,7 @@ public class RegisterEventUseCase
         _validator = new EventValidator(_dbContext);
     }
 
-    public ResponseRegisteredEventJson Execute(RequestEventJson request)
+    public async Task<ResponseRegisteredEventJson> Execute(RequestEventJson request)
     {
         var entity = _mapper.Map<Event>(request);
 
