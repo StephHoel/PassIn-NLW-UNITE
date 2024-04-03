@@ -9,7 +9,7 @@ namespace Api.Controllers;
 [ApiController]
 public class AttendeesController : ControllerBase
 {
-    [HttpPost("register")]
+    [HttpPost]
     [ProducesResponseType(typeof(ResponseRegisteredJson), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
