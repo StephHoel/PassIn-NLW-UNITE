@@ -29,16 +29,4 @@ public class EventsController : ControllerBase
 
         return Ok(response);
     }
-
-    [HttpPost("register")]
-    [ProducesResponseType(typeof(ResponseRegisteredJson), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> RegisterAttendeeOnEvent([FromServices] RegisterAttendeeOnEventUseCase useCase, [FromBody] RequestRegisterEventJson request)
-    {
-        var result = await useCase.Execute(request);
-
-        return Created(string.Empty, result);
-    }
 }
