@@ -25,7 +25,8 @@ public class AutoMapperProfile : Profile
         CreateMap<Attendee, ResponseRegisteredJson>();
 
         CreateMap<Attendee, ResponseAttendeeJson>()
-            .ForMember(dest => dest.CheckedIn_At, opt => opt.Ignore());
+            .ForMember(dest => dest.CheckedIn_At,
+                       opt => opt.MapFrom(src => src.CheckIn != null ? src.CheckIn.Created_at : (DateTime?)null));
 
         CreateMap<List<Attendee>, ResponseAllAttendeesJson>()
             .ForMember(dest => dest.Attendees, opt => opt.MapFrom(src => src));

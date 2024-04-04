@@ -40,6 +40,7 @@ public class AttendeeRepository : IAttendeeRepository
     {
         var entity = _dbContext.Events
             .Include(ev => ev.Attendees)
+            .ThenInclude(at => at.CheckIn)
             .FirstOrDefault(ev => ev.Id == eventId);
 
         if (entity is null)
