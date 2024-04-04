@@ -12,7 +12,7 @@ public class CheckInAttendeeOnEventUseCase
         _repository = repository;
     }
 
-    public ResponseRegisteredJson Execute(Guid attendeeId)
+    public async Task<ResponseRegisteredJson> Execute(Guid attendeeId)
     {
         var response = _repository.DoCheckIn(attendeeId);
 

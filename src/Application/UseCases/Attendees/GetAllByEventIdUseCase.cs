@@ -12,7 +12,7 @@ public class GetAllByEventIdUseCase
         _repository = repository;
     }
 
-    public ResponseAllAttendeesJson Execute(Guid eventId)
+    public async Task<ResponseAllAttendeesJson> Execute(Guid eventId)
     {
         var response = _repository.GetAllByEventId(eventId);
 
