@@ -40,7 +40,7 @@ public class CheckInRepository : ICheckInRepository
         if (existAttendee is false)
             throw new NotFoundException("The attendee with this id was not found.");
 
-        var existCheckIn = _dbContext.CheckIns.Any(ch=>ch.Attendee_Id == attendeeId);
+        var existCheckIn = _dbContext.CheckIns.Any(ch => ch.Attendee_Id == attendeeId);
 
         if (existCheckIn is true)
             throw new ConflictException("Attendee cannot do checking twice in the same event.");

@@ -14,7 +14,6 @@ public class GetAllByEventIdUseCase
 
     public ResponseAllAttendeesJson Execute(Guid eventId)
     {
-
         var response = _repository.GetAllByEventId(eventId);
 
         return response;

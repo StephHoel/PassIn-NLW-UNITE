@@ -1,4 +1,5 @@
 ﻿namespace Communication.Responses;
+
 public class ResponseEventJson
 {
     public Guid Id { get; set; }

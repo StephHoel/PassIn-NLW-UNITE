@@ -2,7 +2,6 @@
 using Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Net;
 
 namespace Api.Filters;
 
