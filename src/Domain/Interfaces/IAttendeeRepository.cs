@@ -5,5 +5,7 @@ namespace Domain.Interfaces;
 
 public interface IAttendeeRepository
 {
-    ResponseRegisteredJson CreateNewAttendee(RequestRegisterEventJson request);
+    ResponseRegisteredJson CreateNewAttendee(Guid eventId, RequestRegisterEventJson request);
+
+    ResponseAllAttendeesJson GetAllByEventId(Guid eventId);
 }

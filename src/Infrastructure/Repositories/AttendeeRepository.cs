@@ -6,16 +6,15 @@ using Domain.Interfaces;
 using Exceptions;
 using Infrastructure.Context;
 using Infrastructure.Validators;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class AttendeeRepository:IAttendeeRepository
+public class AttendeeRepository : IAttendeeRepository
 {
-
     private readonly PassInDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly AttendeeValidator _validator;
-
 
     public AttendeeRepository(PassInDbContext dbContext, IMapper mapper)
     {
@@ -24,9 +23,10 @@ public class AttendeeRepository:IAttendeeRepository
         _validator = new AttendeeValidator();
     }
 
-    public ResponseRegisteredJson CreateNewAttendee(RequestRegisterEventJson request)
+    public ResponseRegisteredJson CreateNewAttendee(Guid eventId, RequestRegisterEventJson request)
     {
         var entity = _mapper.Map<Attendee>(request);
+        entity.Event_Id = eventId;
 
         Validate(entity);
 
@@ -34,6 +34,18 @@ public class AttendeeRepository:IAttendeeRepository
         _dbContext.SaveChanges();
 
         return _mapper.Map<ResponseRegisteredJson>(entity);
+    }
+
+    public ResponseAllAttendeesJson GetAllByEventId(Guid eventId)
+    {
+        var entity = _dbContext.Events
+            .Include(ev => ev.Attendees)
+            .FirstOrDefault(ev => ev.Id == eventId);
+
+        if (entity is null)
+            throw new NotFoundException("An event with this id does not exist.");
+
+        return _mapper.Map<List<Attendee>, ResponseAllAttendeesJson>(entity.Attendees);
     }
 
     public void Validate(Attendee attendee)
@@ -62,6 +74,4 @@ public class AttendeeRepository:IAttendeeRepository
         if (attendeeForEvent >= eventEntity.Maximum_Attendees)
             throw new ConflictException("There is no room for this event.");
     }
-
-
 }

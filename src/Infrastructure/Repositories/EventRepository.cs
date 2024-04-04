@@ -6,6 +6,7 @@ using Domain.Interfaces;
 using Exceptions;
 using Infrastructure.Context;
 using Infrastructure.Validators;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
@@ -44,7 +45,7 @@ public class EventRepository : IEventRepository
 
     public ResponseEventJson GetEventById(Guid id)
     {
-        var entity = _dbContext.Events.FirstOrDefault(e => e.Id == id);
+        var entity = _dbContext.Events.Include(ev => ev.Attendees).FirstOrDefault(ev => ev.Id == id);
 
         if (entity is null)
             throw new NotFoundException("An event with this id does not exist.");
