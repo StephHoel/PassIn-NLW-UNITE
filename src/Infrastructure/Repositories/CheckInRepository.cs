@@ -2,23 +2,28 @@
 using Communication.Responses;
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Shared;
 using Exceptions;
 using Infrastructure.Context;
 using Infrastructure.Validators;
+using Microsoft.Extensions.Localization;
 
 namespace Infrastructure.Repositories;
 
 public class CheckInRepository : ICheckInRepository
 {
     private readonly PassInDbContext _dbContext;
-    private readonly IMapper _mapper;
-    private readonly AttendeeValidator _validator;
 
-    public CheckInRepository(PassInDbContext dbContext, IMapper mapper)
+    private readonly IMapper _mapper;
+    private readonly IStringLocalizer<ErrorMessages> _stringLocalizer;
+
+    public CheckInRepository(PassInDbContext dbContext,
+                             IMapper mapper,
+                             IStringLocalizer<ErrorMessages> stringLocalizer)
     {
         _dbContext = dbContext;
         _mapper = mapper;
-        _validator = new AttendeeValidator();
+        _stringLocalizer = stringLocalizer;
     }
 
     public ResponseRegisteredJson DoCheckIn(Guid attendeeId)
@@ -38,11 +43,11 @@ public class CheckInRepository : ICheckInRepository
         var existAttendee = _dbContext.Attendees.Any(at => at.Id == attendeeId);
 
         if (existAttendee is false)
-            throw new NotFoundException("The attendee with this id was not found.");
+            throw new NotFoundException(_stringLocalizer["AttendeeNotFound"]);
 
         var existCheckIn = _dbContext.CheckIns.Any(ch => ch.Attendee_Id == attendeeId);
 
         if (existCheckIn is true)
-            throw new ConflictException("Attendee cannot do checking twice in the same event.");
+            throw new ConflictException(_stringLocalizer["AttendeeTwiceChecking"]);
     }
 }

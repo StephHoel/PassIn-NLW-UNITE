@@ -1,18 +1,22 @@
 ﻿using Domain.Entities;
+using Domain.Shared;
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 
 namespace Infrastructure.Validators;
 
 public class AttendeeValidator : AbstractValidator<Attendee>
 {
-    public AttendeeValidator()
+    private readonly IStringLocalizer<ErrorMessages> _stringLocalizer;
+    public AttendeeValidator(IStringLocalizer<ErrorMessages> stringLocalizer)
     {
+        _stringLocalizer = stringLocalizer;
         RuleFor(entity => entity.Name)
             .NotEmpty()
-            .WithMessage("The name is invalid");
+            .WithMessage(_stringLocalizer["NameInvalid"]);
 
         RuleFor(entity => entity.Email)
             .EmailAddress()
-            .WithMessage("The email is invalid");
+            .WithMessage(_stringLocalizer["EmailInvalid"]);
     }
 }

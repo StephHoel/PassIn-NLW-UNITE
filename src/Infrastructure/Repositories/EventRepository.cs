@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Domain.Shared;
+using AutoMapper;
 using Communication.Requests;
 using Communication.Responses;
 using Domain.Entities;
@@ -7,6 +8,7 @@ using Exceptions;
 using Infrastructure.Context;
 using Infrastructure.Validators;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace Infrastructure.Repositories;
 
@@ -16,13 +18,15 @@ public class EventRepository : IEventRepository
     private readonly EventValidator _validator;
 
     private readonly IMapper _mapper;
+    private readonly IStringLocalizer<ErrorMessages> _stringLocalizer;
 
-    public EventRepository(PassInDbContext dbContext, IMapper mapper)
+    public EventRepository(PassInDbContext dbContext, IMapper mapper, IStringLocalizer<ErrorMessages> stringLocalizer)
     {
         _dbContext = dbContext;
-        _validator = new EventValidator(_dbContext);
+        _validator = new EventValidator(_dbContext, stringLocalizer);
 
         _mapper = mapper;
+        _stringLocalizer = stringLocalizer;
     }
 
     public ResponseRegisteredJson CreateNewEvent(RequestEventJson request)
@@ -50,7 +54,7 @@ public class EventRepository : IEventRepository
             .FirstOrDefault(ev => ev.Id == id);
 
         if (entity is null)
-            throw new NotFoundException("An event with this id does not exist.");
+            throw new NotFoundException(_stringLocalizer["EventNotExist"]);
 
         return _mapper.Map<ResponseEventJson>(entity);
     }

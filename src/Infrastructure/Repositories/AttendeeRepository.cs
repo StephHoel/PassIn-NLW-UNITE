@@ -3,24 +3,31 @@ using Communication.Requests;
 using Communication.Responses;
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Shared;
 using Exceptions;
 using Infrastructure.Context;
 using Infrastructure.Validators;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace Infrastructure.Repositories;
 
 public class AttendeeRepository : IAttendeeRepository
 {
     private readonly PassInDbContext _dbContext;
-    private readonly IMapper _mapper;
     private readonly AttendeeValidator _validator;
 
-    public AttendeeRepository(PassInDbContext dbContext, IMapper mapper)
+    private readonly IMapper _mapper;
+    private readonly IStringLocalizer<ErrorMessages> _stringLocalizer;
+
+    public AttendeeRepository(PassInDbContext dbContext,
+                              IMapper mapper,
+                              IStringLocalizer<ErrorMessages> stringLocalizer)
     {
         _dbContext = dbContext;
         _mapper = mapper;
-        _validator = new AttendeeValidator();
+        _validator = new AttendeeValidator(stringLocalizer);
+        _stringLocalizer = stringLocalizer;
     }
 
     public ResponseRegisteredJson CreateNewAttendee(Guid eventId, RequestRegisterEventJson request)
@@ -44,7 +51,7 @@ public class AttendeeRepository : IAttendeeRepository
             .FirstOrDefault(ev => ev.Id == eventId);
 
         if (entity is null)
-            throw new NotFoundException("An event with this id does not exist.");
+            throw new NotFoundException(_stringLocalizer["EventNotExist"]);
 
         return _mapper.Map<List<Attendee>, ResponseAllAttendeesJson>(entity.Attendees);
     }
@@ -54,7 +61,7 @@ public class AttendeeRepository : IAttendeeRepository
         var eventEntity = _dbContext.Events.FirstOrDefault(e => e.Id == attendee.Event_Id);
 
         if (eventEntity is null)
-            throw new NotFoundException("An event with this id does not exist.");
+            throw new NotFoundException(_stringLocalizer["EventNotExist"]);
 
         var result = _validator.Validate(attendee);
 
@@ -68,11 +75,11 @@ public class AttendeeRepository : IAttendeeRepository
             .Any(a => a.Email.Equals(attendee.Email) && a.Event_Id == attendee.Event_Id);
 
         if (attendeeAlreadyRegistered is true)
-            throw new ConflictException("You cannot register twice on the same event.");
+            throw new ConflictException(_stringLocalizer["RegisterTwiceSameEvent"]);
 
         var attendeeForEvent = _dbContext.Attendees.Count(x => x.Event_Id == attendee.Event_Id);
 
         if (attendeeForEvent >= eventEntity.Maximum_Attendees)
-            throw new ConflictException("There is no room for this event.");
+            throw new ConflictException(_stringLocalizer["NoRoomEvent"]);
     }
 }
