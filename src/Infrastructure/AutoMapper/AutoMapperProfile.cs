@@ -28,6 +28,6 @@ public class AutoMapperProfile : Profile
             .ForMember(dest => dest.CheckedIn_At, opt => opt.Ignore());
 
         CreateMap<List<Attendee>, ResponseAllAttendeesJson>()
-           .ForMember(dest => dest.Attendees, opt => opt.MapFrom(src => src));
+            .ForMember(dest => dest.Attendees, opt => opt.MapFrom(src => src));
     }
 }

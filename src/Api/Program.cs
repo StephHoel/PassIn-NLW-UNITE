@@ -28,15 +28,18 @@ builder.Services.AddScoped<RegisterEventUseCase>();
 builder.Services.AddScoped<GetEventByIdUseCase>();
 builder.Services.AddScoped<RegisterAttendeeOnEventUseCase>();
 builder.Services.AddScoped<GetAllByEventIdUseCase>();
+builder.Services.AddScoped<CheckInAttendeeOnEventUseCase>();
 
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IAttendeeRepository, AttendeeRepository>();
+builder.Services.AddScoped<ICheckInRepository, CheckInRepository>();
 
 //builder.Services.AddScoped<>();
 
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+builder.Services.AddAutoMapper(typeof(CheckInMapper));
 
 var app = builder.Build();
 

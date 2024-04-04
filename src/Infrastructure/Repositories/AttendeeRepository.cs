@@ -48,7 +48,7 @@ public class AttendeeRepository : IAttendeeRepository
         return _mapper.Map<List<Attendee>, ResponseAllAttendeesJson>(entity.Attendees);
     }
 
-    public void Validate(Attendee attendee)
+    private void Validate(Attendee attendee)
     {
         var eventEntity = _dbContext.Events.FirstOrDefault(e => e.Id == attendee.Event_Id);
 
