@@ -1,0 +1,48 @@
+image: mcr.microsoft.com/dotnet/8/sdk:latest
+
+stages:
+  - test
+  - code_analysis
+
+test:
+  stage: test
+  variables:
+    test_path: "tests/UnitTests/"
+  script:
+    - "cd $test_path"
+    - "dotnet build"
+    - "dotnet test"
+  only:
+      - main # usually develop
+
+sonar:
+  stage: code_analysis
+  variables: 
+    SONAR_SCANNER_OPTS: "-Xmx1024m"
+  script: 
+    - export PATH="$PATH:/root/.dotnet/tools"
+    - export SONAR_SCANNER_OPTS
+    - apt-get update
+    - apt-get install openjdk-8-jre -y
+    
+    - dotnet tool install --global dotnet-sonarscanner --version 4.8.0
+    - dotnet tool install --global coverlet.console --version 1.4.1
+  
+    - |
+      dotnet test ./tests/UnitTests/ --configuration Debug --output ../../output-tests \
+      /p:CollectCoverage=true \
+      /p:CoverletOutputFormat=opencover \
+      /p:CoverletOutput='coverage.opencover.xml' 
+
+    - |
+      dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" \
+      /d:sonar.host.url="$SONAR_URL" \
+      /d:sonar.login="$SONAR_TOKEN" \
+      /d:sonar.cs.opencover.reportsPaths="/builds/StephHoel/PassIn-NLW-UNITE/tests/UnitTests/coverage.opencover.xml" \
+      /d:sonar.analysis.mode="publish" 
+
+    - dotnet build ./tests/
+    - dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
+
+  only:
+    - main # usually develop
