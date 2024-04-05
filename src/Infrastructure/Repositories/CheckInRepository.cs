@@ -5,7 +5,6 @@ using Domain.Interfaces;
 using Domain.Shared;
 using Exceptions;
 using Infrastructure.Context;
-using Infrastructure.Validators;
 using Microsoft.Extensions.Localization;
 
 namespace Infrastructure.Repositories;

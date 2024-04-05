@@ -1,5 +1,4 @@
-﻿using Application.UseCases.Attendees;
-using Application.UseCases.Events;
+﻿using Application.UseCases.Events;
 using Bogus;
 using Communication.Responses;
 using Domain.Interfaces;

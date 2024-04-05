@@ -8,6 +8,7 @@ namespace Infrastructure.Validators;
 public class AttendeeValidator : AbstractValidator<Attendee>
 {
     private readonly IStringLocalizer<ErrorMessages> _stringLocalizer;
+
     public AttendeeValidator(IStringLocalizer<ErrorMessages> stringLocalizer)
     {
         _stringLocalizer = stringLocalizer;

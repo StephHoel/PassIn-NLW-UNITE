@@ -1,9 +1,9 @@
-﻿using Domain.Shared;
-using AutoMapper;
+﻿using AutoMapper;
 using Communication.Requests;
 using Communication.Responses;
 using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Shared;
 using Exceptions;
 using Infrastructure.Context;
 using Infrastructure.Validators;

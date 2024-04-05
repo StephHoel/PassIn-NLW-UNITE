@@ -4,7 +4,6 @@ using Communication.Requests;
 using Communication.Responses;
 using Domain.Interfaces;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 

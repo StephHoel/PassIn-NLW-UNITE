@@ -58,7 +58,7 @@ public class RegisterEventUseCaseTest
         return new Faker<RequestEventJson>()
             .RuleFor(a => a.Title, f => f.Random.String())
             .RuleFor(a => a.Details, f => f.Random.String())
-            .RuleFor(a => a.Maximum_Attendees, f => f.Random.Int(0,10))
+            .RuleFor(a => a.Maximum_Attendees, f => f.Random.Int(0, 10))
             .Generate();
     }
 
