@@ -1,48 +1,50 @@
-image: mcr.microsoft.com/dotnet/8/sdk:latest
+image: mcr.microsoft.com/dotnet/sdk:8.0
 
 stages:
+  - build
   - test
-  - code_analysis
+  - sonarscanner
+
+variables:
+  SOLUTION: "PassIn.sln"
+  SONAR_PROJECT_KEY: "passin"
+  SONAR_USER: "admin"
+  SONAR_PASS: "admin1"
+  SONAR_HOST_URL: "http://localhost:9000" # URL do servidor SonarQube
+  SONAR_TOKEN: "8499d72db78c461d172edde4c1b2eafc4d9348a3" # Token de autenticação do SonarQube
+  TEST_PATH: "tests"
+  UNIT_TEST: "UnitTests"
+  REPORTS_PATH: "/builds/StephHoel/PassIn-NLW-UNITE/"
+
+build:
+  stage: build
+  script:
+    - dotnet restore $SOLUTION
+    - dotnet build $SOLUTION --no-incremental 
 
 test:
   stage: test
-  variables:
-    test_path: "tests/UnitTests/"
   script:
-    - "cd $test_path"
-    - "dotnet build"
-    - "dotnet test"
-  only:
-      - main # usually develop
+    - cd $TEST_PATH/$UNIT_TEST
+    - dotnet build --no-incremental
+    - dotnet test
 
-sonar:
-  stage: code_analysis
-  variables: 
-    SONAR_SCANNER_OPTS: "-Xmx1024m"
-  script: 
+sonarscanner:
+  stage: sonarscanner
+  script:
     - export PATH="$PATH:/root/.dotnet/tools"
-    - export SONAR_SCANNER_OPTS
-    - apt-get update
-    - apt-get install openjdk-8-jre -y
-    
-    - dotnet tool install --global dotnet-sonarscanner --version 4.8.0
-    - dotnet tool install --global coverlet.console --version 1.4.1
-  
-    - |
-      dotnet test ./tests/UnitTests/ --configuration Debug --output ../../output-tests \
-      /p:CollectCoverage=true \
-      /p:CoverletOutputFormat=opencover \
-      /p:CoverletOutput='coverage.opencover.xml' 
+    - dotnet tool install --global coverlet.console
+    - dotnet tool install --global dotnet-sonarscanner --version 4.10.0
+    - dotnet sonarscanner begin -key:"$SONAR_PROJECT_KEY" -d:sonar.login="$SONAR_USER" -d:sonar.password="$SONAR_PASS" -d:sonar.token="$SONAR_TOKEN" -d:sonar.cs.opencover.reportsPaths="$REPORTS_PATH\coverage.xml" -d:sonar.analysis.mode="publish"
+    - dotnet build --no-incremental 
+    - coverlet $TEST_PATH/$UNIT_TEST/bin/Debug/net8.0/$UNIT_TEST.dll --target "dotnet" --targetargs "test --no-build" -f=opencover  -o="coverage.xml" 
+    - dotnet sonarscanner end -d:sonar.login="$SONAR_TOKEN"
+    # - dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" /d:sonar.host.url="$SONAR_HOST_URL"  /d:sonar.login="$SONAR_TOKEN"  /d:sonar.cs.opencover.reportsPaths="$REPORTS_PATH/coverage.opencover.xml"  /d:sonar.analysis.mode="publish" 
+    # - dotnet build ./tests/
+    # - dotnet-sonarscanner end /d:sonar.login="$SONAR_TOKEN"
 
-    - |
-      dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" \
-      /d:sonar.host.url="$SONAR_URL" \
-      /d:sonar.login="$SONAR_TOKEN" \
-      /d:sonar.cs.opencover.reportsPaths="/builds/StephHoel/PassIn-NLW-UNITE/tests/UnitTests/coverage.opencover.xml" \
-      /d:sonar.analysis.mode="publish" 
 
-    - dotnet build ./tests/
-    - dotnet sonarscanner end /d:sonar.login="$SONAR_TOKEN"
-
-  only:
-    - main # usually develop
+# dotnet sonarscanner begin -key:"passin" -d:sonar.login="admin" -d:sonar.password="admin1" -d:sonar.token="8499d72db78c461d172edde4c1b2eafc4d9348a3" -d:sonar.cs.opencover.reportsPaths="coverage.xml" -d:sonar.analysis.mode="publish" \
+# && dotnet build --no-incremental  \
+# && coverlet tests/UnitTests/bin/Debug/net8.0/UnitTests.dll --target "dotnet" --targetargs "test --no-build --settings coverlet.runsettings" -f=opencover  -o="coverage.xml"  \
+# && dotnet sonarscanner end -d:sonar.login="8499d72db78c461d172edde4c1b2eafc4d9348a3"
