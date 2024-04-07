@@ -13,7 +13,7 @@ public class RegisterEventUseCase
         _respository = respository;
     }
 
-    public async Task<ResponseRegisteredJson> Execute(RequestEventJson request)
+    public ResponseRegisteredJson Execute(RequestEventJson request)
     {
         var response = _respository.CreateNewEvent(request);
 

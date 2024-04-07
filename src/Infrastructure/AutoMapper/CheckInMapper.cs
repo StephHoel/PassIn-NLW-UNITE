@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Communication.Responses;
 using Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Infrastructure.AutoMapper;
 
+[ExcludeFromCodeCoverage]
 public class CheckInMapper : Profile
 {
     public CheckInMapper()

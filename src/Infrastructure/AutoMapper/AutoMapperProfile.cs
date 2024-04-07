@@ -2,9 +2,11 @@
 using Communication.Requests;
 using Communication.Responses;
 using Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Infrastructure.AutoMapper;
 
+[ExcludeFromCodeCoverage]
 public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
@@ -15,7 +17,7 @@ public class AutoMapperProfile : Profile
                 .ForMember(dest => dest.Details, opt => opt.MapFrom(src => src.Details.Trim()));
 
         CreateMap<Event, ResponseEventJson>()
-            .ForMember(dest => dest.Attendees_Amount, opt => opt.MapFrom(src => src.Attendees.Count()));
+            .ForMember(dest => dest.Attendees_Amount, opt => opt.MapFrom(src => src.Attendees.Count));
 
         CreateMap<Event, ResponseRegisteredJson>();
 

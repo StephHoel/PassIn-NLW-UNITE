@@ -27,8 +27,8 @@ public class CheckInAttendeeOnEventUseCaseTest
         var checkIn = useCase.Execute(attendeeId);
 
         //ASSERT
-        checkIn.Result.Should().NotBeNull();
-        checkIn.Result.Id.Should().Be(entity.Id);
+        checkIn.Should().NotBeNull();
+        checkIn.Id.Should().Be(entity.Id);
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class CheckInAttendeeOnEventUseCaseTest
         var checkIn = useCase.Execute(attendeeId);
 
         //ASSERT
-        checkIn.Result.Should().BeNull();
+        checkIn.Should().BeNull();
     }
 
     private ResponseRegisteredJson NewEntity()

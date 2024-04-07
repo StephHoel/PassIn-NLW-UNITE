@@ -66,10 +66,7 @@ public class AttendeeRepository : IAttendeeRepository
         var result = _validator.Validate(attendee);
 
         if (!result.IsValid)
-        {
-            foreach (var error in result.Errors)
-                throw new ErrorOnValidationException(error.ErrorMessage);
-        }
+            throw new ErrorOnValidationException(result.Errors[0].ErrorMessage);
 
         var attendeeAlreadyRegistered = _dbContext.Attendees
             .Any(a => a.Email.Equals(attendee.Email) && a.Event_Id == attendee.Event_Id);

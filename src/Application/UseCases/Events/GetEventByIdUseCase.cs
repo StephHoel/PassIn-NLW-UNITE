@@ -12,7 +12,7 @@ public class GetEventByIdUseCase
         _repository = repository;
     }
 
-    public async Task<ResponseEventJson> Execute(Guid id)
+    public ResponseEventJson Execute(Guid id)
     {
         var response = _repository.GetEventById(id);
 

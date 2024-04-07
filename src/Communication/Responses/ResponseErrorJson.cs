@@ -1,11 +1,6 @@
 ﻿namespace Communication.Responses;
 
-public class ResponseErrorJson
+public class ResponseErrorJson(string message)
 {
-    public string Message { get; set; } = string.Empty;
-
-    public ResponseErrorJson(string message)
-    {
-        Message = message;
-    }
+    public string Message { get; set; } = message;
 }

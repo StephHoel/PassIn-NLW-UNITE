@@ -28,8 +28,8 @@ public class RegisterEventUseCaseTest
         var eventUseCase = useCase.Execute(request);
 
         //ASSERT
-        eventUseCase.Result.Should().NotBeNull();
-        eventUseCase.Result.Id.Should().Be(entity.Id);
+        eventUseCase.Should().NotBeNull();
+        eventUseCase.Id.Should().Be(entity.Id);
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public class RegisterEventUseCaseTest
         var eventUseCase = useCase.Execute(newRequest);
 
         //ASSERT
-        eventUseCase.Result.Should().BeNull();
+        eventUseCase.Should().BeNull();
     }
 
     private RequestEventJson NewRequest()

@@ -2,9 +2,11 @@
 using Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Api.Filters;
 
+[ExcludeFromCodeCoverage]
 public class ExceptionFilter : IExceptionFilter
 {
     public void OnException(ExceptionContext context)
@@ -19,7 +21,7 @@ public class ExceptionFilter : IExceptionFilter
         }
     }
 
-    private void HandleProjectException(ExceptionContext context)
+    private static void HandleProjectException(ExceptionContext context)
     {
         if (context.Exception is NotFoundException)
         {
@@ -38,7 +40,7 @@ public class ExceptionFilter : IExceptionFilter
         }
     }
 
-    private void ThrowUnknownError(ExceptionContext context)
+    private static void ThrowUnknownError(ExceptionContext context)
     {
         context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
         context.Result = new ObjectResult(new ResponseErrorJson("Unknown error"));

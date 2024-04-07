@@ -29,8 +29,8 @@ public class RegisterAttendeeOnEventUseCaseTest
         var attendeeUseCase = useCase.Execute(eventId, request);
 
         //ASSERT
-        attendeeUseCase.Result.Should().NotBeNull();
-        attendeeUseCase.Result.Id.Should().Be(entity.Id);
+        attendeeUseCase.Should().NotBeNull();
+        attendeeUseCase.Id.Should().Be(entity.Id);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class RegisterAttendeeOnEventUseCaseTest
         var attendeeUseCase = useCase.Execute(newId, request);
 
         //ASSERT
-        attendeeUseCase.Result.Should().BeNull();
+        attendeeUseCase.Should().BeNull();
     }
 
     private RequestRegisterEventJson NewRequest()

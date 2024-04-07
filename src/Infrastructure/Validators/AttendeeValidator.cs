@@ -7,17 +7,14 @@ namespace Infrastructure.Validators;
 
 public class AttendeeValidator : AbstractValidator<Attendee>
 {
-    private readonly IStringLocalizer<ErrorMessages> _stringLocalizer;
-
     public AttendeeValidator(IStringLocalizer<ErrorMessages> stringLocalizer)
     {
-        _stringLocalizer = stringLocalizer;
         RuleFor(entity => entity.Name)
             .NotEmpty()
-            .WithMessage(_stringLocalizer["NameInvalid"]);
+            .WithMessage(stringLocalizer["NameInvalid"]);
 
         RuleFor(entity => entity.Email)
             .EmailAddress()
-            .WithMessage(_stringLocalizer["EmailInvalid"]);
+            .WithMessage(stringLocalizer["EmailInvalid"]);
     }
 }

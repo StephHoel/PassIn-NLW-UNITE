@@ -36,10 +36,7 @@ public class EventRepository : IEventRepository
         var result = _validator.Validate(entity);
 
         if (!result.IsValid)
-        {
-            foreach (var error in result.Errors)
-                throw new ErrorOnValidationException(error.ErrorMessage);
-        }
+            throw new ErrorOnValidationException(result.Errors[0].ErrorMessage);
 
         _dbContext.Events.Add(entity);
         _dbContext.SaveChanges();

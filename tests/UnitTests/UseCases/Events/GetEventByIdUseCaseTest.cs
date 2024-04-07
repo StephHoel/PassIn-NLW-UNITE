@@ -27,12 +27,12 @@ public class GetEventByIdUseCaseTest
         var eventUseCase = useCase.Execute(id);
 
         //ASSERT
-        eventUseCase.Result.Should().NotBeNull();
-        eventUseCase.Result.Id.Should().Be(entity.Id);
-        eventUseCase.Result.Title.Should().Be(entity.Title);
-        eventUseCase.Result.Details.Should().Be(entity.Details);
-        eventUseCase.Result.Maximum_Attendees.Should().Be(entity.Maximum_Attendees);
-        eventUseCase.Result.Attendees_Amount.Should().Be(entity.Attendees_Amount);
+        eventUseCase.Should().NotBeNull();
+        eventUseCase.Id.Should().Be(entity.Id);
+        eventUseCase.Title.Should().Be(entity.Title);
+        eventUseCase.Details.Should().Be(entity.Details);
+        eventUseCase.Maximum_Attendees.Should().Be(entity.Maximum_Attendees);
+        eventUseCase.Attendees_Amount.Should().Be(entity.Attendees_Amount);
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class GetEventByIdUseCaseTest
         var eventUseCase = useCase.Execute(newId);
 
         //ASSERT
-        eventUseCase.Result.Should().BeNull();
+        eventUseCase.Should().BeNull();
     }
 
     private ResponseEventJson NewEntity(Guid id)

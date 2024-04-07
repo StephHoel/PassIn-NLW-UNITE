@@ -40,8 +40,6 @@ builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IAttendeeRepository, AttendeeRepository>();
 builder.Services.AddScoped<ICheckInRepository, CheckInRepository>();
 
-//builder.Services.AddScoped<>();
-
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
@@ -51,11 +49,9 @@ var app = builder.Build();
 
 app.UseRequestLocalization(new RequestLocalizationOptions
 {
-    //DefaultRequestCulture = new RequestCulture("en-US"),
     DefaultRequestCulture = new RequestCulture("pt-BR"),
     SupportedCultures =
                 [
-                //new CultureInfo("en-US"),
                 new CultureInfo("pt-BR")
                 ]
 });

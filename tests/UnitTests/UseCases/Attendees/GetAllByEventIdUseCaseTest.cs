@@ -27,9 +27,9 @@ public class GetAllByEventIdUseCaseTest
         var eventUseCase = useCase.Execute(eventId);
 
         //ASSERT
-        eventUseCase.Result.Should().NotBeNull();
-        eventUseCase.Result.Attendees.Should().NotBeNull();
-        eventUseCase.Result.Attendees.Should().BeSameAs(response.Attendees);
+        eventUseCase.Should().NotBeNull();
+        eventUseCase.Attendees.Should().NotBeNull();
+        eventUseCase.Attendees.Should().BeSameAs(response.Attendees);
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public class GetAllByEventIdUseCaseTest
         var eventUseCase = useCase.Execute(eventId);
 
         //ASSERT
-        eventUseCase.Result.Should().BeNull();
+        eventUseCase.Should().BeNull();
     }
 
     [Fact]
@@ -74,8 +74,8 @@ public class GetAllByEventIdUseCaseTest
         var eventUseCase = useCase.Execute(eventId);
 
         //ASSERT
-        eventUseCase.Result.Should().NotBeNull();
-        eventUseCase.Result.Attendees.Should().BeEmpty();
+        eventUseCase.Should().NotBeNull();
+        eventUseCase.Attendees.Should().BeEmpty();
     }
 
     private ResponseAllAttendeesJson NewEntity()

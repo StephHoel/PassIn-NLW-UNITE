@@ -13,7 +13,7 @@ public class RegisterAttendeeOnEventUseCase
         _repository = repository;
     }
 
-    public async Task<ResponseRegisteredJson> Execute(Guid eventId, RequestRegisterEventJson request)
+    public ResponseRegisteredJson Execute(Guid eventId, RequestRegisterEventJson request)
     {
         var response = _repository.CreateNewAttendee(eventId, request);
 

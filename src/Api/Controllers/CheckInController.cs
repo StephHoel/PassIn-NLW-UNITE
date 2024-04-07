@@ -1,9 +1,11 @@
 ﻿using Application.UseCases.Attendees;
 using Communication.Responses;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Api.Controllers;
 
+[ExcludeFromCodeCoverage]
 [Route("api/[controller]")]
 [ApiController]
 public class CheckInController : ControllerBase
@@ -13,7 +15,7 @@ public class CheckInController : ControllerBase
     [ProducesResponseType(typeof(ResponseRegisteredJson), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> CheckInAttendeeOnEvent([FromServices] CheckInAttendeeOnEventUseCase useCase, [FromRoute] Guid attendeeId)
+    public IActionResult CheckInAttendeeOnEvent([FromServices] CheckInAttendeeOnEventUseCase useCase, [FromRoute] Guid attendeeId)
     {
         var result = useCase.Execute(attendeeId);
 
